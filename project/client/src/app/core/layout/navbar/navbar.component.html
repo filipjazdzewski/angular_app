@@ -1,0 +1,32 @@
+<div class="layout-navbar">
+  <a class="layout-navbar-logo" routerLink="">
+    <span>GYMRAT</span>
+  </a>
+
+  <button
+    class="p-link layout-navbar-menu-button layout-navbar-button"
+    (click)="showProfileSidebar()"
+  >
+    <i class="pi pi-bars"></i>
+  </button>
+
+  <div
+    class="layout-navbar-menu"
+    [ngClass]="{
+      'layout-navbar-menu-mobile-active': state.profileSidebarVisible
+    }"
+  >
+    <button class="p-link layout-navbar-button" routerLink="/auth/sign-in">
+      <i class="pi pi-sign-in"></i>
+      <span>Sign In</span>
+    </button>
+    <button class="p-link layout-navbar-button" routerLink="/auth/sign-up">
+      <i class="pi pi-user-plus"></i>
+      <span>Sign Up</span>
+    </button>
+    <button class="p-link layout-navbar-button">
+      <i class="pi pi-user"></i>
+      <span>Profile</span>
+    </button>
+  </div>
+</div>

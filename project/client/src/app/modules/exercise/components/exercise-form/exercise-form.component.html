@@ -1,0 +1,179 @@
+<app-go-back-button></app-go-back-button>
+<p-toast></p-toast>
+<div class="flex justify-content-center">
+  <div class="card p-fluid">
+    <h2>{{ exercise ? 'Update' : 'Create' }} Exercise</h2>
+    <form [formGroup]="exerciseForm" (ngSubmit)="onSubmit()">
+      <!-- name -->
+      <div class="p-field mb-3">
+        <label for="name">Name</label>
+        <input
+          pInputText
+          type="text"
+          id="name"
+          formControlName="name"
+          placeholder="Enter a name of the exercise"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              exerciseForm.controls.name.touched &&
+              exerciseForm.controls.name.invalid
+          }"
+        />
+        <div
+          class="p-error"
+          *ngIf="
+            exerciseForm.controls.name.touched &&
+            exerciseForm.controls.name.hasError('required')
+          "
+        >
+          Name is required.
+        </div>
+      </div>
+
+      <!-- description -->
+      <div class="p-field mb-3">
+        <label for="description">Description</label>
+        <textarea
+          pInputTextarea
+          [autoResize]="true"
+          id="description"
+          formControlName="description"
+          rows="3"
+          cols="20"
+          placeholder="Enter a description of the exercise"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              exerciseForm.controls.description.touched &&
+              exerciseForm.controls.description.invalid
+          }"
+        ></textarea>
+        <div
+          class="p-error"
+          *ngIf="
+            exerciseForm.controls.description.touched &&
+            exerciseForm.controls.description.hasError('required')
+          "
+        >
+          Description is required.
+        </div>
+      </div>
+
+      <!-- equipment -->
+      <div class="p-field mb-3">
+        <label for="equipment">Equipment</label>
+        <p-dropdown
+          id="equipment"
+          formControlName="equipment"
+          [options]="equipmentOptions"
+          placeholder="Select Equipment"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              exerciseForm.controls.equipment.touched &&
+              exerciseForm.controls.equipment.invalid
+          }"
+        ></p-dropdown>
+        <div
+          class="p-error"
+          *ngIf="
+            exerciseForm.controls.equipment.touched &&
+            exerciseForm.controls.equipment.hasError('required')
+          "
+        >
+          Equipment is required.
+        </div>
+      </div>
+
+      <!-- body part -->
+      <div class="p-field mb-3">
+        <label for="bodyPart">Body Part</label>
+        <p-dropdown
+          id="bodyPart"
+          formControlName="bodyPart"
+          [options]="bodyPartOptions"
+          placeholder="Select Body Part"
+          [ngClass]="{
+            'ng-invalid ng-dirty':
+              exerciseForm.controls.bodyPart.touched &&
+              exerciseForm.controls.bodyPart.invalid
+          }"
+        ></p-dropdown>
+        <div
+          class="p-error"
+          *ngIf="
+            exerciseForm.controls.bodyPart.touched &&
+            exerciseForm.controls.bodyPart.hasError('required')
+          "
+        >
+          Body part is required.
+        </div>
+      </div>
+
+      <div class="flex justify-content-between align-items-center">
+        <h2>Sets</h2>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-plus"
+          class="p-button-rounded p-button-help"
+          (click)="addSet()"
+        ></button>
+      </div>
+
+      <!-- sets -->
+      <ng-container
+        formArrayName="sets"
+        *ngFor="let setForm of sets.controls; index as i"
+      >
+        <div [formGroup]="setForm" class="p-field mb-3">
+          <label for="reps">Set {{ i + 1 }}</label>
+          <p-inputGroup>
+            <input
+              pInputText
+              type="text"
+              id="reps"
+              formControlName="reps"
+              placeholder="Enter number of reps"
+              [ngClass]="{
+                'ng-invalid ng-dirty':
+                  setForm.controls.reps.touched && setForm.controls.reps.invalid
+              }"
+            />
+            <button
+              pButton
+              type="button"
+              icon="pi pi-trash"
+              class="p-button-danger"
+              (click)="deleteSet(i)"
+            ></button>
+          </p-inputGroup>
+          <div
+            class="p-error"
+            *ngIf="
+              setForm.controls.reps.touched &&
+              setForm.controls.reps.hasError('required')
+            "
+          >
+            Reps are required.
+          </div>
+          <div
+            class="p-error"
+            *ngIf="
+              setForm.controls.reps.touched &&
+              setForm.controls.reps.hasError('min')
+            "
+          >
+            Reps must be greater than 0.
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- submit button -->
+      <div *ngIf="exerciseForm.invalid" pTooltip="Invalid form values">
+        <button pButton type="submit" label="Submit" [disabled]="true"></button>
+      </div>
+      <div *ngIf="exerciseForm.valid">
+        <button pButton type="submit" label="Submit"></button>
+      </div>
+    </form>
+  </div>
+</div>

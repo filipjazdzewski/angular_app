@@ -1,0 +1,19 @@
+<app-go-back-button></app-go-back-button>
+<div class="flex justify-content-center">
+  <p-card header="Name: {{ exercise.name }}" [style]="{ width: '420px' }">
+    <ng-template pTemplate="header">
+      <img
+        alt="Card"
+        src="../../../../../assets/images/mock_exercise_image.jpg"
+      />
+    </ng-template>
+    <ng-template pTemplate="content">
+      <p><strong>Body part:</strong> {{ exercise.bodyPart | titlecase }}</p>
+      <p><strong>Description:</strong> {{ exercise.description }}</p>
+      <p><strong>Equipment:</strong> {{ exercise.equipment | titlecase }}</p>
+      <p><strong>Sets:</strong> {{ exercise.sets | json }}</p>
+      <p><strong>Created:</strong> {{ exercise.createdAt | date }}</p>
+      <p><strong>Updated:</strong> {{ exercise.updatedAt | date }}</p>
+    </ng-template>
+  </p-card>
+</div>

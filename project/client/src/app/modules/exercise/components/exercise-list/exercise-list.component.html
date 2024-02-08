@@ -1,0 +1,216 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card">
+      <p-toast></p-toast>
+      <p-dataView
+        #dv
+        [value]="displayedExercises"
+        [rows]="3"
+        [sortField]="sortField"
+        [totalRecords]="totalRecords"
+        filterBy="name"
+        [paginator]="true"
+        layout="list"
+      >
+        <ng-template pTemplate="header">
+          <div
+            class="flex flex-column md:flex-row md:justify-content-between md:align-items-center gap-2"
+          >
+            <div class="flex justify-content-between md:flex-column gap-2">
+              <div class="flex align-items-center">
+                <i class="pi pi-sort-alt" style="margin-right: 4px"></i>
+                <p-dropdown
+                  placeholder="Sort by"
+                  [options]="sortOptions"
+                  (onChange)="onSort($event.value)"
+                ></p-dropdown>
+              </div>
+              <div class="flex align-items-center">
+                <i class="pi pi-filter" style="margin-right: 4px"></i>
+                <p-dropdown
+                  placeholder="Filter by Body Part"
+                  [options]="filterOptions"
+                  (onChange)="onFilter($event.value)"
+                ></p-dropdown>
+              </div>
+            </div>
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input
+                #filter
+                type="text"
+                pInputText
+                (input)="onSearch(filter.value)"
+                id="search"
+                class="w-full"
+                placeholder="Search by name"
+              />
+            </span>
+            <div class="flex justify-content-between md:flex-column gap-2">
+              <p-button
+                label="New"
+                icon="pi pi-plus"
+                severity="success"
+                routerLink="create"
+              ></p-button>
+              <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template let-displayedExercises pTemplate="listItem">
+          <div
+            class="col-12"
+            *ngFor="
+              let exercise of displayedExercises | exerciseSearch: searchValue;
+              let first = first
+            "
+          >
+            <div
+              class="flex flex-column md:flex-row align-items-center p-3 w-full"
+              [ngClass]="{ 'border-top-1 surface-border': !first }"
+            >
+              <img
+                src="../../../../../assets/images/mock_exercise_image.jpg"
+                [alt]="exercise.name"
+                class="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5"
+              />
+              <div
+                class="flex-1 flex flex-column align-items-center text-center md:text-left"
+              >
+                <div class="font-bold text-2xl">
+                  {{ exercise.name }}
+                </div>
+                <div class="mb-2">
+                  {{ exercise.description }}
+                </div>
+                <div class="flex align-items-center mt-2">
+                  <p-tag
+                    [style]="{
+                      background:
+                        'linear-gradient(-225deg,#AC32E4 0%,#7918F2 48%,#4801FF 100%)'
+                    }"
+                    ><span class="text-base font-semibold text-color">{{
+                      exercise.bodyPart | titlecase
+                    }}</span></p-tag
+                  >
+                </div>
+              </div>
+              <div
+                class="flex flex-row md:flex-column justify-content-between w-full md:w-auto align-items-center md:align-items-end mt-5 md:mt-0"
+              >
+                <p-button
+                  icon="pi pi-pencil"
+                  styleClass="mb-2 p-button-sm"
+                  severity="help"
+                  [routerLink]="['edit/', exercise._id]"
+                ></p-button>
+                <p-button
+                  icon="pi pi-trash"
+                  styleClass="mb-2 p-button-sm"
+                  severity="danger"
+                  (click)="deleteExercise(exercise)"
+                ></p-button>
+                <p-button
+                  icon="pi pi-eye"
+                  styleClass="mb-2 p-button-sm"
+                  [routerLink]="['view/', exercise._id]"
+                ></p-button>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template let-displayedExercises pTemplate="gridItem">
+          <div class="grid grid-nogutter">
+            <div
+              class="col-12 md:col-4"
+              *ngFor="
+                let exercise of displayedExercises | exerciseSearch: searchValue
+              "
+            >
+              <div class="card m-3 border-1 surface-border">
+                <div
+                  class="flex flex-wrap gap-2 align-items-center justify-content-between mb-2"
+                >
+                  <div class="flex align-items-center">
+                    <p-tag
+                      [style]="{
+                        background:
+                          'linear-gradient(-225deg,#AC32E4 0%,#7918F2 48%,#4801FF 100%)'
+                      }"
+                      ><span class="text-base font-semibold text-color">{{
+                        exercise.bodyPart | titlecase
+                      }}</span></p-tag
+                    >
+                  </div>
+                </div>
+                <div
+                  class="flex flex-column align-items-center text-center mb-3"
+                >
+                  <img
+                    src="../../../../../assets/images/mock_exercise_image.jpg"
+                    [alt]="exercise.name"
+                    class="w-9 shadow-2 my-3 mx-0"
+                  />
+                  <div class="text-2xl font-bold">
+                    {{ exercise.name }}
+                  </div>
+                  <div class="mb-3">
+                    {{ exercise.description }}
+                  </div>
+                </div>
+                <div class="flex align-items-center justify-content-between">
+                  <p-button
+                    icon="pi pi-pencil"
+                    severity="help"
+                    [routerLink]="['edit/', exercise._id]"
+                  ></p-button>
+                  <p-button
+                    icon="pi pi-trash"
+                    severity="danger"
+                    (click)="deleteExercise(exercise)"
+                  ></p-button>
+                  <p-button icon="pi pi-eye"></p-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-dataView>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="deleteExerciseDialog"
+  header="Confirm"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+>
+  <div class="flex align-items-center justify-content-center">
+    <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+    <span *ngIf="selectedExercise"
+      >Are you sure you want to delete <b>{{ selectedExercise.name }}</b
+      >?</span
+    >
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      icon="pi pi-times"
+      class="p-button-text"
+      label="No"
+      (click)="deleteExerciseDialog = false"
+    ></button>
+    <button
+      pButton
+      pRipple
+      icon="pi pi-check"
+      class="p-button-text"
+      label="Yes"
+      (click)="confirmDelete()"
+    ></button>
+  </ng-template>
+</p-dialog>
